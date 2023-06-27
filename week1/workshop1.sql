@@ -37,14 +37,15 @@ CREATE TABLE suppliers (
 );
 
 CREATE TABLE customers (
-    id SERIAL PRIMARY KEY,
+    customer_id SERIAL PRIMARY KEY,
     company_name TEXT NOT NULL
 );
 
 CREATE TABLE employees (
-    id SERIAL PRIMARY KEY,
+    employee_id SERIAL PRIMARY KEY,
     first_name TEXT NOT NULL,
-    last_name TEXT NOT NULL
+    last_name TEXT NOT NULL,
+    reports_to INT
 );
 
 CREATE TABLE orders (
@@ -54,7 +55,7 @@ CREATE TABLE orders (
     employee_id INT
 );
 
-CREATE TABLE order_details (
+CREATE TABLE order_products (
     product_id INT NOT NULL,
     order_id INT NOT NULL,
     quantity SMALLINT NOT NULL,
@@ -86,10 +87,15 @@ CREATE TABLE us_states (
 );
 
 --- Add foreign key constraints
+ALTER TABLE orders
+ADD CONSTRAINT fk_orders_customers
+FOREIGN KEY (customer_id)
+REFERENCES customers(customer_id);
 
-
-
-
+ALTER TABLE orders
+ADD CONSTRAINT fk_orders_employees
+FOREIGN KEY (employee_id)
+REFERENCES employees(employee_id);
 
 -- PRODUCTS
 
@@ -98,5 +104,41 @@ ADD CONSTRAINT fk_products_categories
 FOREIGN KEY (category_id) 
 REFERENCES categories (id);
 
+ALTER TABLE products
+ADD CONSTRAINT fk_products_suppliers
+FOREIGN KEY (supplier_id)
+REFERENCES suppliers(id);
 
--- TODO create more constraints here...
+
+ALTER TABLE order_products
+ADD CONSTRAINT fk_order_products_orders
+FOREIGN KEY (order_id)
+REFERENCES orders(id);
+
+ALTER TABLE order_products
+ADD CONSTRAINT fk_order_products_products
+FOREIGN KEY (product_id)
+REFERENCES products(id);
+
+
+ALTER TABLE employees_territories
+ADD CONSTRAINT fk_employees_territories_employees
+FOREIGN KEY (employee_id)
+REFERENCES employees(employee_id);
+
+ALTER TABLE employees_territories
+ADD CONSTRAINT fk_employees_territories_territories
+FOREIGN KEY (territory_id)
+REFERENCES territories(id);
+
+ALTER TABLE offices
+ADD CONSTRAINT fk_offices_territories
+FOREIGN KEY (territory_id)
+REFERENCES territories(id);
+
+-- Bonus
+
+ALTER TABLE employees
+ADD CONSTRAINT fk_employees_reports_to
+FOREIGN KEY (reports_to)
+REFERENCES employees(employee_id);
