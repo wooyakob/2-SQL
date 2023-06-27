@@ -62,13 +62,34 @@ CREATE TABLE order_details (
     PRIMARY KEY (order_id, product_id)
 );
 
+CREATE TABLE territories (
+    id SERIAL PRIMARY KEY,
+    description TEXT NOT NULL
+);
 
+CREATE TABLE employees_territories (
+  employee_id INT NOT NULL,
+  territory_id INT NOT NULL,
+  PRIMARY KEY (employee_id, territory_id)
+);
 
+CREATE TABLE offices (
+    id SERIAL PRIMARY KEY,
+    address_line TEXT NOT NULL,
+    territory_id INT NOT NULL
+);
 
+CREATE TABLE us_states (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    abbreviation CHAR(2) NOT NULL
+);
 
----
 --- Add foreign key constraints
----
+
+
+
+
 
 -- PRODUCTS
 
@@ -79,4 +100,3 @@ REFERENCES categories (id);
 
 
 -- TODO create more constraints here...
-
